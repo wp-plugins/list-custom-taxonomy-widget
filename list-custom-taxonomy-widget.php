@@ -3,7 +3,7 @@
  * Plugin Name: List Custom Taxonomy Widget
  * Plugin URI: http://celloexpressions.com/dev/list-custom-taxonomy-widget
  * Description: Multi-widget for displaying category listings for custom post types (custom taxonomies).
- * Version: 1.0
+ * Version: 1.9
  * Author: Nick Halsey
  * Author URI: http://celloexpressions.com/
  * Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories, post types, custom post types
@@ -47,35 +47,61 @@ class lc_taxonomy extends WP_Widget {
 
 		// Widget options
 		$title 	 = apply_filters('widget_title', $instance['title'] ); // Title		
-		$taxonomy = $instance['taxonomy']; // Taxonomy to show
+		$this_taxonomy = $instance['taxonomy']; // Taxonomy to show
+		$hierarchical = !empty( $instance['hierarchical'] ) ? '1' : '0';
+		$showcount = !empty( $instance['count'] ) ? '1' : '0';
 		
-        	// Output
+        // Output
 		echo $before_widget;
 
 		if ( $title ) echo $before_title . $title . $after_title;
-
-		$tax = $taxonomy;
+		
+		$tax = $this_taxonomy;
 		$args = array(
-				'child_of'                 => 0,
+				'show_option_all'    => '',
+				'orderby'            => 'count',
+				'order'              => 'desc',
+				'style'              => 'list',
+				'show_count'         => $showcount,
+				'hide_empty'         => 1,
+				'use_desc_for_title' => 1,
+				'child_of'           => 0,
+				'feed'               => '',
+				'feed_type'          => '',
+				'feed_image'         => '',
+				'exclude'            => '',
+				'exclude_tree'       => '',
+				'include'            => '',
+				'hierarchical'       => $hierarchical,
+				'title_li'           => '',
+				'show_option_none'   => __('No categories'),
+				'number'             => null,
+				'echo'               => 1,
+				'depth'              => 0,
+				'current_category'   => 0,
+				'pad_counts'         => 0,
+				'taxonomy'           => $tax,
+				'walker'             => null
+/*				'child_of'                 => 0,
 				'parent'                   => '',
 				'orderby'                  => 'count',
 				'order'                    => 'desc',
 				'hide_empty'               => true,
-				'hierarchical'             => true,
+				'hierarchical'             => $hierarchical,
 				'exclude'                  => '',
 				'include'                  => '',
 				'number'                   => '',
 				'taxonomy'                 => $tax,
-				'pad_counts'               => false );
-		$categories=get_categories($args);
+				'pad_counts'               => false */);
+		//$categories=get_categories($args);
 		echo '<ul>';
-		foreach($categories as $category) 
-		{
-			echo '<li><a href="' . get_term_link($category->slug, $tax) . '" title="' . sprintf( __( "View all posts in %s" ), $category->name ) . '" ' . '>' . $category->name.'</a> '; 
-			echo '('. $category->count . ')</li>'; 
-		}//foreach	
+		wp_list_categories($args);
+		//foreach($categories as $category){
+		//	echo '<li><a href="' . get_term_link($category->slug, $tax) . '" title="' . sprintf( __( "View all posts in %s" ), $category->name ) . '" ' . '>' . $category->name.'</a> '; 
+		//	if( $showcount ) { echo '('. $category->count . ')'; }
+		//	echo '</li>'; 
+		//}
 		echo '</ul>';
-
 		// echo widget closing tag
 		echo $after_widget;
 	}
@@ -83,8 +109,12 @@ class lc_taxonomy extends WP_Widget {
 	/** Widget control update */
 	function update( $new_instance, $old_instance ) {
 		$instance    = $old_instance;
+		
 		$instance['title']  = strip_tags( $new_instance['title'] );
 		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
+		$instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
+        $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
+
 		return $instance;
 	}
 	
@@ -96,24 +126,61 @@ class lc_taxonomy extends WP_Widget {
 		    // instance exist? if not set defaults
 		    if ( $instance ) {
 				$title  = $instance['title'];
-		        	$taxonomy = $instance['taxonomy'];
+				$this_taxonomy = $instance['taxonomy'];
+                $showcount = isset($instance['count']) ? (bool) $instance['count'] :false;
+                $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
 		    } else {
 			    //These are our defaults
 				$title  = '';
-		        	$taxonomy = 'category';//this will display the category taxonomy, which is used for normal, built-in posts
+				$this_taxonomy = 'category';//this will display the category taxonomy, which is used for normal, built-in posts
+				$hierarchical = true;
+				$showcount = true;
 		    }
 			
+			//Count number of post types for select box sizing
+			$args=array(
+			  'public'   => true,
+			  '_builtin' => true
+			); 
+			$output = 'names'; // or objects
+			$operator = 'and'; // 'and' or 'or'
+			$taxonomies=get_taxonomies($args,$output,$operator); 
+			foreach ($taxonomies as $tax ) {
+			   $taxonomies_ar[] = $tax;
+			}
 
 		// The widget form ?>
 			<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php echo __( 'Title:' ); ?></label>
-			<input id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" class="widefat" />
+				<label for="<?php echo $this->get_field_id('title'); ?>"><?php echo __( 'Title:' ); ?></label>
+				<input id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" class="widefat" />
 			</p>
 			<p>
-			<label for="<?php echo $this->get_field_id('taxonomy'); ?>"><?php echo __( 'Taxonomy to List:' ); ?></label>
-			<input id="<?php echo $this->get_field_id('taxonomy'); ?>" name="<?php echo $this->get_field_name('taxonomy'); ?>" type="text" value="<?php echo $taxonomy; ?>" size="20" />
+				<label for="<?php echo $this->get_field_id('taxonomy'); ?>"><?php echo __( 'Select Taxonomy:' ); ?></label>
+				<select name="<?php echo $this->get_field_name('taxonomy'); ?>" id="<?php echo $this->get_field_id('taxonomy'); ?>" class="widefat" style="height: auto;" size="4">
+			<?php 
+			$args=array(
+			  'public'   => true,
+			  '_builtin' => false //these are manually added to the array later
+			); 
+			$output = 'names'; // or objects
+			$operator = 'and'; // 'and' or 'or'
+			$taxonomies=get_taxonomies($args,$output,$operator); 
+			$taxonomies[] = 'category';
+			$taxonomies[] = 'post_tag';
+			$taxonomies[] = 'post_format';
+			foreach ($taxonomies as $taxonomy ) { ?>
+				<option value="<?php echo $taxonomy; ?>" <?php if( $taxonomy == $this_taxonomy ) { echo 'selected="selected"'; } ?>><?php echo $taxonomy;?></option>
+			<?php }	?>
+			</select>
 			</p>
-	<?php 
+			
+            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $showcount ); ?> />
+            <label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
+            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
+            <label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
+			
+			
+<?php 
 	}
 
 } // class lc_taxonomy
