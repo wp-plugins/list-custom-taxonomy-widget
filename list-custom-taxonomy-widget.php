@@ -3,10 +3,10 @@
  * Plugin Name: List Custom Taxonomy Widget
  * Plugin URI: http://celloexpressions.com/dev/list-custom-taxonomy-widget
  * Description: Multi-widget for displaying category listings for custom post types (custom taxonomies).
- * Version: 2.0
+ * Version: 3.0
  * Author: Nick Halsey
  * Author URI: http://celloexpressions.com/
- * Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories, post types, custom post types
+ * Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories, post types, custom post types, custom post type categories
  * License: GPL
  
 =====================================================================================
@@ -50,68 +50,76 @@ class lc_taxonomy extends WP_Widget {
 		$this_taxonomy = $instance['taxonomy']; // Taxonomy to show
 		$hierarchical = !empty( $instance['hierarchical'] ) ? '1' : '0';
 		$showcount = !empty( $instance['count'] ) ? '1' : '0';
-		
+		if( array_key_exists('orderby',$instance) ){
+			$orderby = $instance['orderby'];
+		}
+		else{
+			$orderby = 'count';
+		}
+		if( array_key_exists('ascdsc',$instance) ){
+			$ascdsc = $instance['ascdsc'];
+		}
+		else{
+			$ascdsc = 'desc';
+		}
+		if( array_key_exists('exclude',$instance) ){
+			$exclude = $instance['exclude'];
+		}
+		else {
+			$exclude = '';
+		}
+		if( array_key_exists('childof',$instance) ){
+			$childof = $instance['childof'];
+		}
+		else {
+			$childof = '';
+		}
         // Output
 		echo $before_widget;
-
 		if ( $title ) echo $before_title . $title . $after_title;
-		
 		$tax = $this_taxonomy;
 		$args = array(
 				'show_option_all'    => '',
-				'orderby'            => 'count',
-				'order'              => 'desc',
+				'orderby'            => $orderby,
+				'order'              => $ascdsc,
 				'style'              => 'list',
 				'show_count'         => $showcount,
 				'hide_empty'         => 1,
 				'use_desc_for_title' => 1,
-				'child_of'           => 0,
-				'feed'               => '',
-				'feed_type'          => '',
-				'feed_image'         => '',
-				'exclude'            => '',
-				'exclude_tree'       => '',
-				'include'            => '',
+				'child_of'           => $childof,
+				//'feed'               => '',
+				//'feed_type'          => '',
+				//'feed_image'         => '',
+				//'exclude'            => $exclude,
+				//'exclude_tree'       => '',
+				//'include'            => '',
 				'hierarchical'       => $hierarchical,
-				'title_li'           => '',
+				//'title_li'           => '',
 				'show_option_none'   => __('No categories'),
 				'number'             => null,
 				'echo'               => 1,
 				'depth'              => 0,
-				'current_category'   => 0,
-				'pad_counts'         => 0,
+				//'current_category'   => 0,
+				//'pad_counts'         => 0,
 				'taxonomy'           => $tax,
 				'walker'             => null
-/*				'child_of'                 => 0,
-				'parent'                   => '',
-				'orderby'                  => 'count',
-				'order'                    => 'desc',
-				'hide_empty'               => true,
-				'hierarchical'             => $hierarchical,
-				'exclude'                  => '',
-				'include'                  => '',
-				'number'                   => '',
-				'taxonomy'                 => $tax,
-				'pad_counts'               => false */);
-		//$categories=get_categories($args);
+			);
 		echo '<ul>';
 		wp_list_categories($args);
-		//foreach($categories as $category){
-		//	echo '<li><a href="' . get_term_link($category->slug, $tax) . '" title="' . sprintf( __( "View all posts in %s" ), $category->name ) . '" ' . '>' . $category->name.'</a> '; 
-		//	if( $showcount ) { echo '('. $category->count . ')'; }
-		//	echo '</li>'; 
-		//}
 		echo '</ul>';
-		// echo widget closing tag
 		echo $after_widget;
 	}
-//get_category_link( $category->term_id ) . 
 	/** Widget control update */
 	function update( $new_instance, $old_instance ) {
 		$instance    = $old_instance;
 		
 		$instance['title']  = strip_tags( $new_instance['title'] );
 		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
+		$instance['orderby'] = $new_instance['orderby'];
+		$instance['ascdsc'] = $new_instance['ascdsc'];
+		$instance['exclude'] = $new_instance['exclude'];
+		$instance['expandoptions'] = $new_instance['expandoptions'];
+		$instance['childof'] = $new_instance['childof'];
 		$instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
         $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
 
@@ -122,16 +130,47 @@ class lc_taxonomy extends WP_Widget {
 	* Widget settings
 	**/
 	function form( $instance ) {	
-	
-		    // instance exist? if not set defaults
+		//for showing/hiding advanced options; wordpress moves this script to where it needs to go
+			wp_enqueue_script('jquery');
+			?><script>
+			jQuery(document).ready(function(){
+				var status = jQuery('#<?php echo $this->get_field_id('expandoptions'); ?>').val();
+				if(status == 'expand')
+					jQuery('.lctw-expand-options').hide();
+				else if(status == 'contract'){
+					jQuery('.lctw-all-options').hide();
+				}
+			});
+			function lctwExpand(id){
+				jQuery('#' + id).val('expand');
+				jQuery('.lctw-all-options').show(500); 
+				jQuery('.lctw-expand-options').hide(500);
+			}
+			function lctwContract(id){
+				jQuery('#' + id).val('contract');
+				jQuery('.lctw-all-options').hide(500); 
+				jQuery('.lctw-expand-options').show(500);
+			}
+			</script><?php
+		  // instance exist? if not set defaults
 		    if ( $instance ) {
 				$title  = $instance['title'];
 				$this_taxonomy = $instance['taxonomy'];
+				$orderby = $instance['orderby'];
+				$ascdsc = $instance['ascdsc'];
+				$exclude = $instance['exclude'];
+				$expandoptions = $instance['expandoptions'];
+				$childof = $instance['childof'];
                 $showcount = isset($instance['count']) ? (bool) $instance['count'] :false;
                 $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
 		    } else {
 			    //These are our defaults
 				$title  = '';
+				$orderby  = 'count';
+				$ascdsc  = 'desc';
+				$exclude  = '';
+				$expandoptions  = 'contract';
+				$childof  = '';
 				$this_taxonomy = 'category';//this will display the category taxonomy, which is used for normal, built-in posts
 				$hierarchical = true;
 				$showcount = true;
@@ -173,13 +212,39 @@ class lc_taxonomy extends WP_Widget {
 			<?php }	?>
 			</select>
 			</p>
-			
-            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $showcount ); ?> />
-            <label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
-            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
-            <label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
-			
-			
+			<h4 class="lctw-expand-options"><a href="javascript:void(0)" onclick="lctwExpand('<?php echo $this->get_field_id('expandoptions'); ?>')" >More Options...</a></h4>
+			<div class="lctw-all-options">
+				<h4 class="lctw-contract-options"><a href="javascript:void(0)" onclick="lctwContract('<?php echo $this->get_field_id('expandoptions'); ?>')" >Hide Extended Options</a></h4>
+				<input type="hidden" value="<?php echo $expandoptions; ?>" id="<?php echo $this->get_field_id('expandoptions'); ?>" name="<?php echo $this->get_field_name('expandoptions'); ?>" />
+				
+				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $showcount ); ?> />
+				<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
+				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
+				<label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
+				
+				<p>
+					<label for="<?php echo $this->get_field_id('orderby'); ?>"><?php echo __( 'Order By:' ); ?></label>
+					<select name="<?php echo $this->get_field_name('orderby'); ?>" id="<?php echo $this->get_field_id('orderby'); ?>" class="widefat" >
+						<option value="ID" <?php if( $orderby == 'ID' ) { echo 'selected="selected"'; } ?>>ID</option>
+						<option value="name" <?php if( $orderby == 'name' ) { echo 'selected="selected"'; } ?>>Name</option>
+						<option value="slug" <?php if( $orderby == 'slug' ) { echo 'selected="selected"'; } ?>>Slug</option>
+						<option value="count" <?php if( $orderby == 'count' ) { echo 'selected="selected"'; } ?>>Count</option>
+						<option value="term_group" <?php if( $orderby == 'term_group' ) { echo 'selected="selected"'; } ?>>Term Group</option>
+					</select>
+				</p>
+				<p>
+					<label><input type="radio" name="<?php echo $this->get_field_name('ascdsc'); ?>" value="asc" <?php if( $ascdsc == 'asc' ) { echo 'checked'; } ?>/> Ascending</label><br/>
+					<label><input type="radio" name="<?php echo $this->get_field_name('ascdsc'); ?>" value="desc" <?php if( $ascdsc == 'desc' ) { echo 'checked'; } ?>/> Descending</label>
+				</p>
+				<p>
+					<label for="<?php echo $this->get_field_id('exclude'); ?>">Exclude (comma-separated list of ids to exclude)</label><br/>
+					<input type="text" class="widefat" name="<?php echo $this->get_field_name('exclude'); ?>" value="<?php echo $exclude; ?>" />
+				</p>
+				<p>
+					<label for="<?php echo $this->get_field_id('exclude'); ?>">Only Show Children of (category id)</label><br/>
+					<input type="text" class="widefat" name="<?php echo $this->get_field_name('childof'); ?>" value="<?php echo $childof; ?>" />
+				</p>
+			</div>
 <?php 
 	}
 

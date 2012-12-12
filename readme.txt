@@ -2,8 +2,8 @@
 Contributors: celloexpressions
 Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories
 Requires at least: 3.3.0
-Tested up to: 3.4.2
-Stable tag: 2.0
+Tested up to: 3.5.0
+Stable tag: 3.0
 Description: Adds a multi-widget that lists a custom taxonomy (categories for a custom post type). Works similarly to the built-in categories widget.
 License: GPLv2
 
@@ -16,27 +16,34 @@ Please feel free to offer any feature suggestions you might have and I WILL cons
 1. Take the easy route and install through the wordpress plugin adder :) OR
 1. Download the .zip file and upload the unzipped folder to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Add the widget to your sidebar(s) with wordpress' drag-and-drop interface.
+1. Add the widget to your sidebar(s) with wordpress' drag-and-drop interface and configure the options.
 
 == Frequently Asked Questions ==
-= How do I find the "Taxonomy Name" =
-This is no longer necessary. If you're unsure which taxonomy to use, try the different ones until you find what you're looking for. All of the taxonomies available are listed.
-
 = Where's the settings page? =
 There is no (need for a) settings page. Simply go to appearance->widgets and drag the List Custom Taxonomy Widget into your sidebar(s) where you want to list the category/taxonomy.
 
+= Can I Do ___? =
+If you'd like to do something outside of the configuration options of this plugin, look at the <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">WordPress Codex documentation on the function this plugin implements, wp_list categories</a>. If this function can do it, the plugin can do it with minor edits, just look in list-custom-taxonomy-widget.php in the plugin editor. If it's a potentially more universally useful feature, let me know and I'll add support from the widgets page. 
+
 == Changelog ==
+= 3.0 =
+* Confirmed compatibility with WordPress 3.5
+* Added many new features. Click the more options button to view all of the available configuration options. Features include:
+* Order by count, id, slug, name, or term group; ascending or descending
+* Exclude categories by id
+* Only show children of a particular category (useful for nested/hierarchical category systems)
+* Detailed configuration options are hidden by default
+
 = 2.0 =
 * Available Taxonomies are now listed in a automatically, so it isn't necessary to go searching for the taxonomy's name
 * Ability to show count (or hide it)
 * Ability to specify to display hierarchically (like in builtin categories widget)
 * Confirmed Wordpress 3.4.2 compatibility
 
-
 = 1.0 =
 * First publically available version of the plugin.
 * Compatible with Wordpress 3.3.0 through 3.4.1
 
 == Upgrade Notice ==
-= 2.0 =
-New features and easier to use; functions much more like the builtin categories widget.
+= 3.0 =
+Lots of new features and WordPress 3.5 compatibility.
