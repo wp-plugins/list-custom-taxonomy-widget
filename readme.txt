@@ -2,13 +2,13 @@
 Contributors: celloexpressions
 Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories
 Requires at least: 3.3.0
-Tested up to: 3.5.0
-Stable tag: 3.0
-Description: Adds a multi-widget that lists a custom taxonomy (categories for a custom post type). Works similarly to the built-in categories widget.
+Tested up to: 3.5.1
+Stable tag: 3.1
+Description: Adds a multi-widget that lists a custom taxonomy (often used as categories or category types for a custom post type).
 License: GPLv2
 
 == Description ==
-The List Custom Taxonomy Widget is a quick and easy way to display custom post type categories (also known as custom taxonomies). Simply choose the taxonomy name you want to display from an auto-populated list. You can also set a title to display for the widget. Multiple list custom taxonomy widgets can be added to the same and other sidebars as well.
+The List Custom Taxonomy Widget is a quick and easy way to display custom taxonomies. Simply choose the taxonomy name you want to display from an auto-populated list. You can also set a title to display for the widget. Multiple list custom taxonomy widgets can be added to the same and other sidebars as well.
 
 Please feel free to offer any feature suggestions you might have and I WILL consider them for future updates.
 
@@ -26,6 +26,10 @@ There is no (need for a) settings page. Simply go to appearance->widgets and dra
 If you'd like to do something outside of the configuration options of this plugin, look at the <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">WordPress Codex documentation on the function this plugin implements, wp_list categories</a>. If this function can do it, the plugin can do it with minor edits, just look in list-custom-taxonomy-widget.php in the plugin editor. If it's a potentially more universally useful feature, let me know and I'll add support from the widgets page. 
 
 == Changelog ==
+= 3.1 =
+* Fixed major bug where "categories" was displayed first, with everything else as a child, for many users
+* Updated readme
+
 = 3.0 =
 * Confirmed compatibility with WordPress 3.5
 * Added many new features. Click the more options button to view all of the available configuration options. Features include:
