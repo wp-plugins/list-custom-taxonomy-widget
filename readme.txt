@@ -3,7 +3,7 @@ Contributors: celloexpressions
 Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories
 Requires at least: 3.3.0
 Tested up to: 3.5.1
-Stable tag: 3.1
+Stable tag: 3.1.1
 Description: Adds a multi-widget that lists a custom taxonomy (often used as categories or category types for a custom post type).
 License: GPLv2
 
@@ -26,6 +26,9 @@ There is no (need for a) settings page. Simply go to appearance->widgets and dra
 If you'd like to do something outside of the configuration options of this plugin, look at the <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">WordPress Codex documentation on the function this plugin implements, wp_list categories</a>. If this function can do it, the plugin can do it with minor edits, just look in list-custom-taxonomy-widget.php in the plugin editor. If it's a potentially more universally useful feature, let me know and I'll add support from the widgets page. 
 
 == Changelog ==
+= 3.1.1 =
+* For some reason, I have no idea why, the line that executed the "exclude" capability was commented out. Update fixes the bug.
+
 = 3.1 =
 * Fixed major bug where "categories" was displayed first, with everything else as a child, for many users
 * Updated readme
@@ -49,5 +52,5 @@ If you'd like to do something outside of the configuration options of this plugi
 * Compatible with Wordpress 3.3.0 through 3.4.1
 
 == Upgrade Notice ==
-= 3.0 =
-Lots of new features and WordPress 3.5 compatibility.
+= 3.1.1 =
+Bugfixes.

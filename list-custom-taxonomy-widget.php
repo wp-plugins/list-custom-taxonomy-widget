@@ -3,7 +3,7 @@
  * Plugin Name: List Custom Taxonomy Widget
  * Plugin URI: http://celloexpressions.com/dev/list-custom-taxonomy-widget
  * Description: Multi-widget for displaying category listings for custom post types (custom taxonomies).
- * Version: 3.1
+ * Version: 3.1.1
  * Author: Nick Halsey
  * Author URI: http://celloexpressions.com/
  * Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories, post types, custom post types, custom post type categories
@@ -90,7 +90,7 @@ class lc_taxonomy extends WP_Widget {
 				//'feed'               => '',
 				//'feed_type'          => '',
 				//'feed_image'         => '',
-				//'exclude'            => $exclude,
+				'exclude'            => $exclude,
 				//'exclude_tree'       => '',
 				//'include'            => '',
 				'hierarchical'       => $hierarchical,
