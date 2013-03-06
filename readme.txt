@@ -3,12 +3,12 @@ Contributors: celloexpressions
 Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories
 Requires at least: 3.3.0
 Tested up to: 3.5.1
-Stable tag: 3.1.1
+Stable tag: 3.2
 Description: Adds a multi-widget that lists a custom taxonomy (often used as categories or category types for a custom post type).
 License: GPLv2
 
 == Description ==
-The List Custom Taxonomy Widget is a quick and easy way to display custom taxonomies. Simply choose the taxonomy name you want to display from an auto-populated list. You can also set a title to display for the widget. Multiple list custom taxonomy widgets can be added to the same and other sidebars as well.
+The List Custom Taxonomy Widget is a quick and easy way to display custom taxonomies. Simply choose the taxonomy name you want to display from an auto-populated list. You can also set a title to display for the widget. Multiple list custom taxonomy widgets can be added to the same and other sidebars as well. There are several display options (including as a dropdown), and it generally behaves similarly to the built-in categories widget but with the addition of custom taxonomies.
 
 Please feel free to offer any feature suggestions you might have and I WILL consider them for future updates.
 
@@ -22,10 +22,18 @@ Please feel free to offer any feature suggestions you might have and I WILL cons
 = Where's the settings page? =
 There is no (need for a) settings page. Simply go to appearance->widgets and drag the List Custom Taxonomy Widget into your sidebar(s) where you want to list the category/taxonomy.
 
+= [insert option/feature] isn't working... =
+The widgets API can sometimes get messy when I've added features in an update since you first used the widget. If you're having trouble seeing all of the options, first try clicking "save" on the widget, and if that doesn't work you can refresh individual widgets by removing them and creating a new instance (drag a new list custom taxonomy widget into your sidebar and set up the options from scratch).
+
 = Can I Do ___? =
 If you'd like to do something outside of the configuration options of this plugin, look at the <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">WordPress Codex documentation on the function this plugin implements, wp_list categories</a>. If this function can do it, the plugin can do it with minor edits, just look in list-custom-taxonomy-widget.php in the plugin editor. If it's a potentially more universally useful feature, let me know and I'll add support from the widgets page. 
 
+
 == Changelog ==
+= 3.2 =
+* Added ability to display categories with dropdown (and go button) instead of as a list (the default), find it at the bottom of the "more options" section'
+* Improved documentation
+
 = 3.1.1 =
 * For some reason, I have no idea why, the line that executed the "exclude" capability was commented out. Update fixes the bug.
 

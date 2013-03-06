@@ -3,7 +3,7 @@
  * Plugin Name: List Custom Taxonomy Widget
  * Plugin URI: http://celloexpressions.com/dev/list-custom-taxonomy-widget
  * Description: Multi-widget for displaying category listings for custom post types (custom taxonomies).
- * Version: 3.1.1
+ * Version: 3.2
  * Author: Nick Halsey
  * Author URI: http://celloexpressions.com/
  * Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories, post types, custom post types, custom post type categories
@@ -74,39 +74,72 @@ class lc_taxonomy extends WP_Widget {
 		else {
 			$childof = '';
 		}
+		if( array_key_exists('dropdown',$instance) ){
+			$dropdown = $instance['dropdown'];
+		}
+		else {
+			$dropdown = false;
+		}
         // Output
 		echo $before_widget;
 		if ( $title ) echo $before_title . $title . $after_title;
 		$tax = $this_taxonomy;
-		$args = array(
+		if($dropdown){
+			$args = array(
 				'show_option_all'    => false,
-				'orderby'            => $orderby,
+				'show_option_none'   => '',
+				'orderby'            => $orderby, 
 				'order'              => $ascdsc,
-				'style'              => 'list',
-				'show_count'         => $showcount,
-				'hide_empty'         => 1,
-				'use_desc_for_title' => 1,
+				'show_count'         => 0,
+				'hide_empty'         => 1, 
 				'child_of'           => $childof,
-				//'feed'               => '',
-				//'feed_type'          => '',
-				//'feed_image'         => '',
 				'exclude'            => $exclude,
-				//'exclude_tree'       => '',
-				//'include'            => '',
-				'hierarchical'       => $hierarchical,
-				'title_li'           => '',
-				'show_option_none'   => __('No categories'),
-				'number'             => null,
 				'echo'               => 1,
+				//'selected'           => 0,
+				'hierarchical'       => $hierarchical, 
+				'name'               => 'cat',
+				//'id'                 => '',
+				//'class'              => 'postform',
 				'depth'              => 0,
-				//'current_category'   => 0,
-				//'pad_counts'         => 0,
+				//'tab_index'          => 0,
 				'taxonomy'           => $tax,
-				'walker'             => null
+				'hide_if_empty'      => true
 			);
-		echo '<ul>';
-		wp_list_categories($args);
-		echo '</ul>';
+			echo '<form action="'. get_bloginfo('url'). '" method="get">';
+			wp_dropdown_categories($args);
+			echo '<input type="submit" name="submit" value="go &raquo;" /></form>';
+		}
+		else {
+			$args = array(
+					'show_option_all'    => false,
+					'orderby'            => $orderby,
+					'order'              => $ascdsc,
+					'style'              => 'list',
+					'show_count'         => $showcount,
+					'hide_empty'         => 1,
+					'use_desc_for_title' => 1,
+					'child_of'           => $childof,
+					//'feed'               => '',
+					//'feed_type'          => '',
+					//'feed_image'         => '',
+					'exclude'            => $exclude,
+					//'exclude_tree'       => '',
+					//'include'            => '',
+					'hierarchical'       => $hierarchical,
+					'title_li'           => '',
+					'show_option_none'   => 'No Categories',
+					'number'             => null,
+					'echo'               => 1,
+					'depth'              => 0,
+					//'current_category'   => 0,
+					//'pad_counts'         => 0,
+					'taxonomy'           => $tax,
+					'walker'             => null
+				);
+			echo '<ul>';
+			wp_list_categories($args);
+			echo '</ul>';
+		}
 		echo $after_widget;
 	}
 	/** Widget control update */
@@ -122,6 +155,7 @@ class lc_taxonomy extends WP_Widget {
 		$instance['childof'] = $new_instance['childof'];
 		$instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
         $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
+        $instance['dropdown'] = !empty($new_instance['dropdown']) ? 1 : 0;
 
 		return $instance;
 	}
@@ -129,7 +163,7 @@ class lc_taxonomy extends WP_Widget {
 	/**
 	* Widget settings
 	**/
-	function form( $instance ) {	
+	function form( $instance ) {
 		//for showing/hiding advanced options; wordpress moves this script to where it needs to go
 			wp_enqueue_script('jquery');
 			?><script>
@@ -163,6 +197,7 @@ class lc_taxonomy extends WP_Widget {
 				$childof = $instance['childof'];
                 $showcount = isset($instance['count']) ? (bool) $instance['count'] :false;
                 $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
+                $dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
 		    } else {
 			    //These are our defaults
 				$title  = '';
@@ -174,20 +209,9 @@ class lc_taxonomy extends WP_Widget {
 				$this_taxonomy = 'category';//this will display the category taxonomy, which is used for normal, built-in posts
 				$hierarchical = true;
 				$showcount = true;
+				$dropdown = false;
 		    }
 			
-			//Count number of post types for select box sizing
-			$args=array(
-			  'public'   => true,
-			  '_builtin' => true
-			); 
-			$output = 'names'; // or objects
-			$operator = 'and'; // 'and' or 'or'
-			$taxonomies=get_taxonomies($args,$output,$operator); 
-			foreach ($taxonomies as $tax ) {
-			   $taxonomies_ar[] = $tax;
-			}
-
 		// The widget form ?>
 			<p>
 				<label for="<?php echo $this->get_field_id('title'); ?>"><?php echo __( 'Title:' ); ?></label>
@@ -244,6 +268,8 @@ class lc_taxonomy extends WP_Widget {
 					<label for="<?php echo $this->get_field_id('exclude'); ?>">Only Show Children of (category id)</label><br/>
 					<input type="text" class="widefat" name="<?php echo $this->get_field_name('childof'); ?>" value="<?php echo $childof; ?>" />
 				</p>
+				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>"<?php checked( $dropdown ); ?> />
+				<label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e( 'Display as Dropdown' ); ?></label></p>
 			</div>
 <?php 
 	}
