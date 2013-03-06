@@ -3,7 +3,7 @@ Contributors: celloexpressions
 Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories
 Requires at least: 3.3.0
 Tested up to: 3.5.1
-Stable tag: 3.2
+Stable tag: 3.2.1
 Description: Adds a multi-widget that lists a custom taxonomy (often used as categories or category types for a custom post type).
 License: GPLv2
 
@@ -30,6 +30,9 @@ If you'd like to do something outside of the configuration options of this plugi
 
 
 == Changelog ==
+= 3.2.1 =
+* Added classes/ids and containers to widgets to alow easier selecting with CSS and JavaScript
+
 = 3.2 =
 * Added ability to display categories with dropdown (and go button) instead of as a list (the default), find it at the bottom of the "more options" section'
 * Improved documentation
