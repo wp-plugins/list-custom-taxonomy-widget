@@ -108,7 +108,7 @@ class lc_taxonomy extends WP_Widget {
 			);
 			echo '<form action="'. get_bloginfo('url'). '" method="get">';
 			wp_dropdown_categories($args);
-			echo '<input type="submit" name="submit" value="go &raquo;" /></form>';
+			echo '<input type="submit" value="go &raquo;" /></form>';
 		}
 		else {
 			$args = array(
