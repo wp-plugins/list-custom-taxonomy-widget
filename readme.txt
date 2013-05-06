@@ -1,6 +1,6 @@
 === List Custom Taxonomy Widget ===
 Contributors: celloexpressions
-Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, custom category, custom categories
+Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, taxonomy, custom category, custom categories, post types, custom post types, custom post type categories
 Requires at least: 3.3.0
 Tested up to: 3.5.1
 Stable tag: 3.2.1
@@ -19,6 +19,9 @@ Please feel free to offer any feature suggestions you might have and I WILL cons
 1. Add the widget to your sidebar(s) with wordpress' drag-and-drop interface and configure the options.
 
 == Frequently Asked Questions ==
+= Can I Show Custom Taxonomies in a [Page/Header/non-widget-area] =
+I'll save you the hassle of downloading the plugin and digging through its source code. Just use the `wp_list_categories()` function in your theme (or plugin) to display custom taxonomies as a list, and use `wp_dropdown_categories` for a dropdown (this one does require some supplementary html). This plugin is essentially a widget UI shell for these functions. If you want to use the plugin's code for it, go right ahead, but it really does just widgetize those functions.
+
 = Where's the settings page? =
 There is no (need for a) settings page. Simply go to appearance->widgets and drag the List Custom Taxonomy Widget into your sidebar(s) where you want to list the category/taxonomy.
 
@@ -26,10 +29,13 @@ There is no (need for a) settings page. Simply go to appearance->widgets and dra
 The widgets API can sometimes get messy when I've added features in an update since you first used the widget. If you're having trouble seeing all of the options, first try clicking "save" on the widget, and if that doesn't work you can refresh individual widgets by removing them and creating a new instance (drag a new list custom taxonomy widget into your sidebar and set up the options from scratch).
 
 = Can I Do ___? =
-If you'd like to do something outside of the configuration options of this plugin, look at the <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">WordPress Codex documentation on the function this plugin implements, wp_list categories</a>. If this function can do it, the plugin can do it with minor edits, just look in list-custom-taxonomy-widget.php in the plugin editor. If it's a potentially more universally useful feature, let me know and I'll add support from the widgets page. 
+If you'd like to do something outside of the configuration options of this plugin, look at the <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">WordPress Codex documentation on the function this plugin implements, wp_list categories</a>. If this function can do it, the plugin can do it with minor edits, just look in list-custom-taxonomy-widget.php in the plugin editor. If it's a more universally helpful feature, let me know and I'll add support in the widget UI. 
 
 
 == Changelog ==
+= 3.3 = 
+* Fixed bug where dropdown input 404d unless it was the built-in category taxonomy
+
 = 3.2.1 =
 * Added classes/ids and containers to widgets to alow easier selecting with CSS and JavaScript
 
