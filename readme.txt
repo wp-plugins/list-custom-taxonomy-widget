@@ -1,9 +1,9 @@
 === List Custom Taxonomy Widget ===
 Contributors: celloexpressions
 Tags: custom taxonomy, custom tax, widget, sidebar, category, categories, taxonomy, custom category, custom categories, post types, custom post types, custom post type categories
-Requires at least: 3.3.0
-Tested up to: 3.5.1
-Stable tag: 3.2.1
+Requires at least: 3.3
+Tested up to: 3.6
+Stable tag: 3.3
 Description: Adds a multi-widget that lists a custom taxonomy (often used as categories or category types for a custom post type).
 License: GPLv2
 
@@ -34,7 +34,8 @@ If you'd like to do something outside of the configuration options of this plugi
 
 == Changelog ==
 = 3.3 = 
-* Fixed bug where dropdown input 404d unless it was the built-in category taxonomy
+* Fixed bug where dropdown input 404d unless it was the built-in category taxonomy; dropdown option should work properly now
+* Plugin is WordPress 3.6 compatible
 
 = 3.2.1 =
 * Added classes/ids and containers to widgets to alow easier selecting with CSS and JavaScript
@@ -69,5 +70,5 @@ If you'd like to do something outside of the configuration options of this plugi
 * Compatible with Wordpress 3.3.0 through 3.4.1
 
 == Upgrade Notice ==
-= 3.1.1 =
-Bugfixes.
+= 3.3 =
+Bugfix: dropdowns should work now.

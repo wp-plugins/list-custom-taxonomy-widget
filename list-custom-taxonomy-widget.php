@@ -27,7 +27,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 =====================================================================================
 */
-  
+
 // Register 'List Custom Taxonomy' widget
 add_action( 'widgets_init', 'init_lc_taxonomy' );
 function init_lc_taxonomy() { return register_widget('lc_taxonomy'); }
@@ -90,22 +90,23 @@ class lc_taxonomy extends WP_Widget {
 			$args = array(
 				'show_option_all'    => false,
 				'show_option_none'   => '',
-				'orderby'            => $orderby, 
+				'orderby'            => $orderby,
 				'order'              => $ascdsc,
-				'show_count'         => 0,
-				'hide_empty'         => 1, 
+				'show_count'         => $showcount,
+				'hide_empty'         => 1,
 				'child_of'           => $childof,
 				'exclude'            => $exclude,
 				'echo'               => 1,
 				//'selected'           => 0,
-				'hierarchical'       => $hierarchical, 
+				'hierarchical'       => $hierarchical,
 				'name'               => $taxonomy_object->query_var,
 				'id'                 => 'lct-widget-'.$tax,
 				//'class'              => 'postform',
 				'depth'              => 0,
 				//'tab_index'          => 0,
 				'taxonomy'           => $tax,
-				'hide_if_empty'      => true
+				'hide_if_empty'      => true,
+				'walker'			=> new lctwidget_Taxonomy_Dropdown_Walker()
 			);
 			echo '<form action="'. get_bloginfo('url'). '" method="get">';
 			wp_dropdown_categories($args);
@@ -279,4 +280,22 @@ class lc_taxonomy extends WP_Widget {
 
 } // class lc_taxonomy
 
+/* Custom version of Walker_CategoryDropdown */
+class lctwidget_Taxonomy_Dropdown_Walker extends Walker {
+	var $tree_type = 'category';
+	var $db_fields = array ( 'id' => 'term_id', 'parent' => 'parent' );
+
+	function start_el( &$output, $term, $depth, $args ) {
+		$url = get_term_link( $term, $term->taxonomy );
+
+		$text = str_repeat( '&nbsp;', $depth * 3 ) . $term->name;
+		if ( $args['show_count'] ) {
+			$text .= '&nbsp;('. $term->count .')';
+		}
+
+		$class_name = 'level-' . $depth;
+
+		$output.= "\t" . '<option' . ' class="' . esc_attr( $class_name ) . '" value="' . esc_url( $url ) . '">' . esc_html( $text ) . '</option>' . "\n";
+	}
+}
 ?>
