@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: List Custom Taxonomy Widget
- * Plugin URI: http://celloexpressions.com/dev/list-custom-taxonomy-widget
+ * Plugin URI: http://celloexpressions.com/plugins/list-custom-taxonomy-widget
  * Description: Multi-widget for displaying category listings for custom post types (custom taxonomies).
  * Version: 3.3
  * Author: Nick Halsey
