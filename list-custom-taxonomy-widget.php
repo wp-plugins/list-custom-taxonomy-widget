@@ -254,7 +254,7 @@ class lc_taxonomy extends WP_Widget {
 				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
 				<label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show Hierarchy' ); ?></label><br/>
 				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('empty'); ?>" name="<?php echo $this->get_field_name('empty'); ?>"<?php checked( $empty ); ?> />
-				<label for="<?php echo $this->get_field_id('empty'); ?>"><?php _e( 'Show Empty Taxonomies' ); ?></label></p>
+				<label for="<?php echo $this->get_field_id('empty'); ?>"><?php _e( 'Show Empty Terms' ); ?></label></p>
 				
 				<p>
 					<label for="<?php echo $this->get_field_id('orderby'); ?>"><?php echo __( 'Order By:' ); ?></label>
