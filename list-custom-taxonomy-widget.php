@@ -49,6 +49,7 @@ class lc_taxonomy extends WP_Widget {
 		$title 	 = apply_filters('widget_title', $instance['title'] ); // Title		
 		$this_taxonomy = $instance['taxonomy']; // Taxonomy to show
 		$hierarchical = !empty( $instance['hierarchical'] ) ? '1' : '0';
+		$inv_empty = !empty( $instance['empty'] ) ? '0' : '1'; // invert to go from UI's "show empty" to WP's "hide empty"
 		$showcount = !empty( $instance['count'] ) ? '1' : '0';
 		if( array_key_exists('orderby',$instance) ){
 			$orderby = $instance['orderby'];
@@ -93,7 +94,7 @@ class lc_taxonomy extends WP_Widget {
 				'orderby'            => 'RANDOM()',//$orderby,
 				'order'              => $ascdsc,
 				'show_count'         => $showcount,
-				'hide_empty'         => 1,
+				'hide_empty'         => $inv_empty,
 				'child_of'           => $childof,
 				'exclude'            => $exclude,
 				'echo'               => 1,
@@ -119,7 +120,7 @@ class lc_taxonomy extends WP_Widget {
 					'order'              => $ascdsc,
 					'style'              => 'list',
 					'show_count'         => $showcount,
-					'hide_empty'         => 1,
+					'hide_empty'         => $inv_empty,
 					'use_desc_for_title' => 1,
 					'child_of'           => $childof,
 					//'feed'               => '',
@@ -148,7 +149,7 @@ class lc_taxonomy extends WP_Widget {
 	}
 	/** Widget control update */
 	function update( $new_instance, $old_instance ) {
-		$instance    = $old_instance;
+		$instance = $old_instance;
 		
 		$instance['title']  = strip_tags( $new_instance['title'] );
 		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
@@ -158,6 +159,7 @@ class lc_taxonomy extends WP_Widget {
 		$instance['expandoptions'] = $new_instance['expandoptions'];
 		$instance['childof'] = $new_instance['childof'];
 		$instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
+		$instance['empty'] = !empty($new_instance['empty']) ? 1 : 0;
         $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
         $instance['dropdown'] = !empty($new_instance['dropdown']) ? 1 : 0;
 
@@ -201,6 +203,7 @@ class lc_taxonomy extends WP_Widget {
 				$childof = $instance['childof'];
                 $showcount = isset($instance['count']) ? (bool) $instance['count'] :false;
                 $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
+                $empty = isset( $instance['empty'] ) ? (bool) $instance['empty'] : false;
                 $dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
 		    } else {
 			    //These are our defaults
@@ -213,6 +216,7 @@ class lc_taxonomy extends WP_Widget {
 				$this_taxonomy = 'category';//this will display the category taxonomy, which is used for normal, built-in posts
 				$hierarchical = true;
 				$showcount = true;
+				$empty = false;
 				$dropdown = false;
 		    }
 			
@@ -246,9 +250,11 @@ class lc_taxonomy extends WP_Widget {
 				<input type="hidden" value="<?php echo $expandoptions; ?>" id="<?php echo $this->get_field_id('expandoptions'); ?>" name="<?php echo $this->get_field_name('expandoptions'); ?>" />
 				
 				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $showcount ); ?> />
-				<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
+				<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show Post Counts' ); ?></label><br />
 				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
-				<label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
+				<label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show Hierarchy' ); ?></label><br/>
+				<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('empty'); ?>" name="<?php echo $this->get_field_name('empty'); ?>"<?php checked( $empty ); ?> />
+				<label for="<?php echo $this->get_field_id('empty'); ?>"><?php _e( 'Show Empty Taxonomies' ); ?></label></p>
 				
 				<p>
 					<label for="<?php echo $this->get_field_id('orderby'); ?>"><?php echo __( 'Order By:' ); ?></label>
