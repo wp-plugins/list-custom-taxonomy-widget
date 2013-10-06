@@ -88,6 +88,10 @@ class lc_taxonomy extends WP_Widget {
 		if ( $title ) echo $before_title . $title . $after_title;
 		if($dropdown){
 			$taxonomy_object = get_taxonomy( $tax );
+			if( in_array( $tax, array( 'category', 'post_tag', 'post_format' ) ) )
+				$walker = '';
+			else
+				$walker = new lctwidget_Taxonomy_Dropdown_Walker();
 			$args = array(
 				'show_option_all'    => false,
 				'show_option_none'   => '',
@@ -107,7 +111,7 @@ class lc_taxonomy extends WP_Widget {
 				//'tab_index'          => 0,
 				'taxonomy'           => $tax,
 				'hide_if_empty'      => true,
-				'walker'			=> new lctwidget_Taxonomy_Dropdown_Walker()
+				'walker'			=> $walker,
 			);
 			echo '<form action="'. get_bloginfo('url'). '" method="get">';
 			wp_dropdown_categories($args);
@@ -291,7 +295,7 @@ class lctwidget_Taxonomy_Dropdown_Walker extends Walker {
 	var $tree_type = 'category';
 	var $db_fields = array ( 'id' => 'term_id', 'parent' => 'parent' );
 
-	function start_el( &$output, $term, $depth, $args ) {
+		function start_el( &$output, $term, $depth = 0, $args = array(), $current_object_id = 0 ) {
 		$url = get_term_link( $term, $term->taxonomy );
 
 		$text = str_repeat( '&nbsp;', $depth * 3 ) . $term->name;
