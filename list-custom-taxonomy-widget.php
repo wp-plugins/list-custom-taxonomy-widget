@@ -192,9 +192,10 @@ class lc_taxonomy extends WP_Widget {
 			?><script>
 			jQuery(document).ready(function(){
 				var status = jQuery('#<?php echo $this->get_field_id('expandoptions'); ?>').val();
-				if(status == 'expand')
+				if ( status === 'expand' ) {
 					jQuery('.lctw-expand-options').hide();
-				else if(status == 'contract'){
+					jQuery('.lctw-all-options').show();
+				} else {
 					jQuery('.lctw-all-options').hide();
 				}
 			});
