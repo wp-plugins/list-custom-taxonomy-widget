@@ -46,8 +46,16 @@ class lc_taxonomy extends WP_Widget {
 		extract($args);
 
 		// Widget options
-		$title 	 = apply_filters('widget_title', $instance['title'] ); // Title		
-		$this_taxonomy = $instance['taxonomy']; // Taxonomy to show
+		if ( array_key_exists( 'title', $instance ) ) { 
+			$title = apply_filters('widget_title', $instance['title'] ); // Title
+		} else {
+			$title = '';
+		}
+		if ( array_key_exists( 'taxonomy', $instance ) ) {
+			$this_taxonomy = $instance['taxonomy']; // Taxonomy to show
+		} else {
+			$this_taxonomy = '';
+		}
 		$hierarchical = !empty( $instance['hierarchical'] ) ? '1' : '0';
 		$inv_empty = !empty( $instance['empty'] ) ? '0' : '1'; // invert to go from UI's "show empty" to WP's "hide empty"
 		$showcount = !empty( $instance['count'] ) ? '1' : '0';
@@ -79,6 +87,11 @@ class lc_taxonomy extends WP_Widget {
 			$dropdown = $instance['dropdown'];
 		}
 		else {
+			$dropdown = false;
+		}
+		// Dropdown doesn't work for built-in taxonomies.
+		$builtin = array( 'post_tag', 'post_format', 'category' );
+		if ( $dropdown && in_array( $this_taxonomy, $builtin ) ) {
 			$dropdown = false;
 		}
         // Output
