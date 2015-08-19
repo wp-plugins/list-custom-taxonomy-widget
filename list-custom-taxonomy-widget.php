@@ -10,7 +10,7 @@
  * License: GPL
  
 =====================================================================================
-Copyright (C) 2013 Nick Halsey
+Copyright (C) 2015 Nick Halsey
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -34,8 +34,8 @@ function init_lc_taxonomy() { return register_widget('lc_taxonomy'); }
 
 class lc_taxonomy extends WP_Widget {
 	/** constructor */
-	function lc_taxonomy() {
-		parent::WP_Widget( 'lc_taxonomy', $name = 'List Custom Taxonomy' );
+	function __construct() {
+		parent::__construct( 'lc_taxonomy', $name = 'List Custom Taxonomy' );
 	}
 
 	/**
